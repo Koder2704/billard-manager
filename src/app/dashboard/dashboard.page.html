@@ -1,0 +1,114 @@
+<ion-header class="ion-text-center ion-no-border">
+  <ion-toolbar>
+    <ion-buttons class="ion-margin" slot="start">
+      <ion-icon id="actions" name="ellipsis-vertical"></ion-icon>
+    </ion-buttons>
+
+    <ion-buttons class="ion-margin" slot="end">
+      <ion-icon
+        slot="icon-only"
+        name="trash"
+        color="danger"
+        *ngIf="selectionMode"
+        (click)="removeManyPlayers()"
+      ></ion-icon>
+    </ion-buttons>
+
+    <ion-buttons class="ion-margin" slot="end">
+      <ion-icon
+        slot="icon-only"
+        name="close"
+        *ngIf="selectionMode"
+        (click)="toggleSelectionMode()"
+      ></ion-icon>
+    </ion-buttons>
+  </ion-toolbar>
+
+  <ion-popover #popover trigger="actions" triggerAction="click" side="bottom">
+    <ng-template>
+      <ion-list class="ion-padding">
+        <ion-item
+          *ngIf="!selectionMode"
+          button="true"
+          (click)="toggleSelectionMode()"
+        >
+          <ion-label>Selectionner</ion-label>
+        </ion-item>
+        <ion-item
+        *ngIf="selectionMode"
+        button="true"
+        (click)="toggleSelectionMode()"
+        >
+        <ion-label>Deselectionner</ion-label>
+      </ion-item>
+
+      <ion-item button="true" (click)="addPlayerFromMenu()">
+        <ion-label>Ajouter un joueur</ion-label>
+      </ion-item>
+      
+        <ion-item button="true" (click)="startGame()">
+          <ion-label>Demarrer</ion-label>
+        </ion-item>
+
+        <ion-item button="true" lines="none" (click)="designWinner()">
+          <ion-label>Designer le vainqueur</ion-label>
+        </ion-item>
+
+        <ion-item button="true" lines="none" (click)="endParty()">
+          <ion-label color="danger">Quitter la partie</ion-label>
+        </ion-item>
+      </ion-list>
+    </ng-template>
+  </ion-popover>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-item lines="none">
+    <ion-title slot="start">
+      <strong>Participants</strong>
+    </ion-title>
+    <ion-text *ngIf="playerList.length <= 9" slot="end">{{ playerList.length }} Joueurs</ion-text>
+    <ion-text *ngIf="playerList.length > 9" slot="end">{{ playerList.length }} Jou...</ion-text>
+  </ion-item>
+  <ion-list *ngIf="!selectionMode">
+    <ion-card *ngFor="let pID of playerList">
+      <ion-item lines="none">
+        <ion-label>
+          <h3>Joueur {{ pID }}</h3>
+          <ion-note> {{ status }}</ion-note>
+        </ion-label>
+
+        <!-- <ion-buttons slot="end">
+          <ion-icon
+            name="trash"
+            slot="icon-only"
+            color="danger"
+            (click)="removePlayer(pID)"
+          ></ion-icon> 
+        </ion-buttons> -->
+      </ion-item>
+    </ion-card>
+  </ion-list>
+
+  <ion-list *ngIf="selectionMode">
+    <ion-card *ngFor="let pID of playerList">
+      <ion-item lines="none">
+        <ion-checkbox (ionChange)="makePlayerSelection($event, pID)">
+          <ion-label>
+            <h3>Joueur {{ pID }}</h3>
+            <ion-note> {{ status }}</ion-note>
+          </ion-label>
+
+          <!-- <ion-buttons slot="end">
+            <ion-icon
+              name="trash"
+              slot="icon-only"
+              color="danger"
+              (click)="removePlayer(pID)"
+            ></ion-icon>
+          </ion-buttons> -->
+        </ion-checkbox>
+      </ion-item>
+    </ion-card>
+  </ion-list>
+</ion-content>
